@@ -100,6 +100,28 @@ stats_display_igmp(struct stats_igmp *igmp, const char *name)
 }
 #endif /* IGMP_STATS || MLD6_STATS */
 
+#if TCP_STATS
+void
+stats_display_tcp(struct stats_tcp *tcp, const char *name)
+{
+  LWIP_PLATFORM_DIAG(("\n%s\n\t", name));
+  LWIP_PLATFORM_DIAG(("xmit: %"STAT_COUNTER_F"\n\t", tcp->xmit));
+  LWIP_PLATFORM_DIAG(("recv: %"STAT_COUNTER_F"\n\t", tcp->recv));
+  LWIP_PLATFORM_DIAG(("fw: %"STAT_COUNTER_F"\n\t", tcp->fw));
+  LWIP_PLATFORM_DIAG(("drop: %"STAT_COUNTER_F"\n\t", tcp->drop));
+  LWIP_PLATFORM_DIAG(("chkerr: %"STAT_COUNTER_F"\n\t", tcp->chkerr));
+  LWIP_PLATFORM_DIAG(("lenerr: %"STAT_COUNTER_F"\n\t", tcp->lenerr));
+  LWIP_PLATFORM_DIAG(("memerr: %"STAT_COUNTER_F"\n\t", tcp->memerr));
+  LWIP_PLATFORM_DIAG(("rterr: %"STAT_COUNTER_F"\n\t", tcp->rterr));
+  LWIP_PLATFORM_DIAG(("proterr: %"STAT_COUNTER_F"\n\t", tcp->proterr));
+  LWIP_PLATFORM_DIAG(("opterr: %"STAT_COUNTER_F"\n\t", tcp->opterr));
+  LWIP_PLATFORM_DIAG(("err: %"STAT_COUNTER_F"\n\t", tcp->err));
+  LWIP_PLATFORM_DIAG(("cachehit: %"STAT_COUNTER_F"\n", tcp->cachehit));
+  LWIP_PLATFORM_DIAG(("rexmit: %"STAT_COUNTER_F"\n", tcp->rexmit));
+  LWIP_PLATFORM_DIAG(("fast_rexmit: %"STAT_COUNTER_F"\n", tcp->fast_rexmit));
+}
+#endif /* TCP_STATS */
+
 #if MEM_STATS || MEMP_STATS
 void
 stats_display_mem(struct stats_mem *mem, const char *name)

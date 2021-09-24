@@ -1606,6 +1606,11 @@ tcp_output_segment(struct tcp_seg *seg, struct tcp_pcb *pcb, struct netif *netif
   }
 #endif /* CHECKSUM_GEN_TCP */
   TCP_STATS_INC(tcp.xmit);
+  if (pcb->flags & TF_RTO) {
+    if (TCP_SEQ_LT(lwip_ntohl(seg->tcphdr->seqno), pcb->rto_end)) {
+      TCP_STATS_INC(tcp.rexmit);
+    }
+  }
 
   NETIF_SET_HINTS(netif, &(pcb->netif_hints));
   err = ip_output_if(seg->p, &pcb->local_ip, &pcb->remote_ip, pcb->ttl,
@@ -1814,6 +1819,8 @@ tcp_rexmit_fast(struct tcp_pcb *pcb)
 
       /* Reset the retransmission timer to prevent immediate rto retransmissions */
       pcb->rtime = 0;
+
+      TCP_STATS_INC(tcp.fast_rexmit);
     }
   }
 }

@@ -94,6 +94,24 @@ struct stats_igmp {
   STAT_COUNTER tx_report;        /* Sent reports. */
 };
 
+/** TCP related stats */
+struct stats_tcp {
+  STAT_COUNTER xmit;             /* Transmitted packets. */
+  STAT_COUNTER recv;             /* Received packets. */
+  STAT_COUNTER fw;               /* Forwarded packets. */
+  STAT_COUNTER drop;             /* Dropped packets. */
+  STAT_COUNTER chkerr;           /* Checksum error. */
+  STAT_COUNTER lenerr;           /* Invalid length error. */
+  STAT_COUNTER memerr;           /* Out of memory error. */
+  STAT_COUNTER rterr;            /* Routing error. */
+  STAT_COUNTER proterr;          /* Protocol error. */
+  STAT_COUNTER opterr;           /* Error in options. */
+  STAT_COUNTER err;              /* Misc error. */
+  STAT_COUNTER cachehit;
+  STAT_COUNTER rexmit;           /* TCP retransmit segments */
+  STAT_COUNTER fast_rexmit;      /* TCP fast retransmit segments */
+};
+
 /** Memory stats */
 struct stats_mem {
 #if defined(LWIP_DEBUG) || LWIP_STATS_DISPLAY
@@ -260,7 +278,7 @@ struct stats_ {
 #endif
 #if TCP_STATS
   /** TCP */
-  struct stats_proto tcp;
+  struct stats_tcp tcp;
 #endif
 #if MEM_STATS
   /** Heap */
@@ -323,7 +341,7 @@ void stats_init(void);
 
 #if TCP_STATS
 #define TCP_STATS_INC(x) STATS_INC(x)
-#define TCP_STATS_DISPLAY() stats_display_proto(&lwip_stats.tcp, "TCP")
+#define TCP_STATS_DISPLAY() stats_display_tcp(&lwip_stats.tcp, "TCP")
 #else
 #define TCP_STATS_INC(x)
 #define TCP_STATS_DISPLAY()
@@ -472,6 +490,7 @@ void stats_init(void);
 void stats_display(void);
 void stats_display_proto(struct stats_proto *proto, const char *name);
 void stats_display_igmp(struct stats_igmp *igmp, const char *name);
+void stats_display_tcp(struct stats_tcp *tcp, const char *name);
 void stats_display_mem(struct stats_mem *mem, const char *name);
 void stats_display_memp(struct stats_mem *mem, int index);
 void stats_display_sys(struct stats_sys *sys);
@@ -479,6 +498,7 @@ void stats_display_sys(struct stats_sys *sys);
 #define stats_display()
 #define stats_display_proto(proto, name)
 #define stats_display_igmp(igmp, name)
+#define stats_display_tcp(tcp, name)
 #define stats_display_mem(mem, name)
 #define stats_display_memp(mem, index)
 #define stats_display_sys(sys)
