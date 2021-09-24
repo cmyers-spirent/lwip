@@ -1539,11 +1539,16 @@ tcp_output_segment(struct tcp_seg *seg, struct tcp_pcb *pcb, struct netif *netif
     pcb->rtime = 0;
   }
 
-  if (pcb->rttest == 0) {
-    pcb->rttest = tcp_ticks;
-    pcb->rtseq = lwip_ntohl(seg->tcphdr->seqno);
+#if LWIP_TCP_TIMESTAMPS
+  if (!tcp_is_flag_set(pcb, TF_TIMESTAMP))
+#endif
+  {
+    if (pcb->rttest == 0) {
+      pcb->rttest = tcp_ticks;
+      pcb->rtseq = lwip_ntohl(seg->tcphdr->seqno);
 
-    LWIP_DEBUGF(TCP_RTO_DEBUG, ("tcp_output_segment: rtseq %"U32_F"\n", pcb->rtseq));
+      LWIP_DEBUGF(TCP_RTO_DEBUG, ("tcp_output_segment: rtseq %"U32_F"\n", pcb->rtseq));
+    }
   }
   LWIP_DEBUGF(TCP_OUTPUT_DEBUG, ("tcp_output_segment: %"U32_F":%"U32_F"\n",
                                  lwip_htonl(seg->tcphdr->seqno), lwip_htonl(seg->tcphdr->seqno) +
